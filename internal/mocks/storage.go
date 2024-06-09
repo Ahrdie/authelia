@@ -574,6 +574,21 @@ func (mr *MockStorageMockRecorder) LoadWebAuthnCredentialsByUsername(ctx, rpid, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadWebAuthnCredentialsByUsername", reflect.TypeOf((*MockStorage)(nil).LoadWebAuthnCredentialsByUsername), ctx, rpid, username)
 }
 
+// LoadWebAuthnPasskeyCredentialsByUsername mocks base method.
+func (m *MockStorage) LoadWebAuthnPasskeyCredentialsByUsername(arg0 context.Context, arg1, arg2 string) ([]model.WebAuthnCredential, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoadWebAuthnPasskeyCredentialsByUsername", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]model.WebAuthnCredential)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoadWebAuthnPasskeyCredentialsByUsername indicates an expected call of LoadWebAuthnPasskeyCredentialsByUsername.
+func (mr *MockStorageMockRecorder) LoadWebAuthnPasskeyCredentialsByUsername(arg0, arg1, arg2 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadWebAuthnPasskeyCredentialsByUsername", reflect.TypeOf((*MockStorage)(nil).LoadWebAuthnPasskeyCredentialsByUsername), arg0, arg1, arg2)
+}
+
 // LoadWebAuthnUser mocks base method.
 func (m *MockStorage) LoadWebAuthnUser(ctx context.Context, rpid, username string) (*model.WebAuthnUser, error) {
 	m.ctrl.T.Helper()
@@ -587,6 +602,21 @@ func (m *MockStorage) LoadWebAuthnUser(ctx context.Context, rpid, username strin
 func (mr *MockStorageMockRecorder) LoadWebAuthnUser(ctx, rpid, username any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadWebAuthnUser", reflect.TypeOf((*MockStorage)(nil).LoadWebAuthnUser), ctx, rpid, username)
+}
+
+// LoadWebAuthnUserByUserID mocks base method.
+func (m *MockStorage) LoadWebAuthnUserByUserID(arg0 context.Context, arg1, arg2 string) (*model.WebAuthnUser, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoadWebAuthnUserByUserID", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*model.WebAuthnUser)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoadWebAuthnUserByUserID indicates an expected call of LoadWebAuthnUserByUserID.
+func (mr *MockStorageMockRecorder) LoadWebAuthnUserByUserID(arg0, arg1, arg2 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadWebAuthnUserByUserID", reflect.TypeOf((*MockStorage)(nil).LoadWebAuthnUserByUserID), arg0, arg1, arg2)
 }
 
 // RevokeIdentityVerification mocks base method.
