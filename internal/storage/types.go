@@ -38,6 +38,11 @@ type encWebAuthnCredential struct {
 	Attestation []byte `db:"attestation"`
 }
 
+type encCachedData struct {
+	ID    int    `db:"id"`
+	Value []byte `db:"value"`
+}
+
 type encTOTPConfiguration struct {
 	ID     int    `db:"id"`
 	Secret []byte `db:"secret"`

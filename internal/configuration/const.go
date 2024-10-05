@@ -83,7 +83,6 @@ var (
 
 var (
 	mapDefaults = map[string]any{
-		"webauthn.metadata.path":                              "data.mds3",
 		"webauthn.metadata.validate_trust_anchor":             true,
 		"webauthn.metadata.validate_entry":                    true,
 		"webauthn.metadata.validate_entry_permit_zero_aaguid": false,

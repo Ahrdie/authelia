@@ -303,6 +303,15 @@ type Provider interface {
 	SchemaEncryptionCheckKey(ctx context.Context, verbose bool) (result EncryptionValidationResult, err error)
 
 	RegulatorProvider
+	CachedDataProvider
+}
+
+type CachedDataProvider interface {
+	// LoadCachedData loads cached data from the database.
+	LoadCachedData(ctx context.Context, name string) (data *model.CachedData, err error)
+
+	// SaveCachedData saves cached data to the database.
+	SaveCachedData(ctx context.Context, data model.CachedData) (err error)
 }
 
 // RegulatorProvider is an interface providing storage capabilities for persisting any kind of data related to the regulator.

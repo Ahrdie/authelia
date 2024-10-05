@@ -165,7 +165,7 @@ func (ctx *CmdCtx) LoadProviders() (warns, errs []error) {
 		errs = append(errs, err)
 	}
 
-	if ctx.providers.MetaDataService, err = webauthn.NewMetaDataProvider(ctx.config); err != nil {
+	if ctx.providers.MetaDataService, err = webauthn.NewMetaDataProvider(ctx.config, ctx.providers.StorageProvider); err != nil {
 		errs = append(errs, err)
 	}
 

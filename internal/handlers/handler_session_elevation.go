@@ -46,7 +46,7 @@ func UserSessionElevationGET(ctx *middlewares.AutheliaCtx) {
 		return
 	}
 
-	switch level := userSession.AuthenticationLevel(); {
+	switch level := userSession.AuthenticationLevel(ctx.Configuration.WebAuthn.EnablePasskey2FA); {
 	case level >= authentication.TwoFactor:
 		if ctx.Configuration.IdentityValidation.ElevatedSession.SkipSecondFactor {
 			response.SkipSecondFactor = true

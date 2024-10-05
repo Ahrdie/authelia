@@ -45,6 +45,10 @@ func IsCredentialCreationDiscoverable(logger *logrus.Entry, response *protocol.P
 }
 
 func ValidateCredentialAllowed(config *schema.WebAuthn, credential *model.WebAuthnCredential) (err error) {
+	if config.Filtering.ProhibitBackupEligibility && credential.BackupEligible {
+		return fmt.Errorf("error checking webauthn credential: filters have been configured which prohibit credentials that are backup eligible")
+	}
+
 	if len(config.Filtering.PermittedAAGUIDs) != 0 {
 		for _, aaguid := range config.Filtering.PermittedAAGUIDs {
 			if credential.AAGUID.UUID == aaguid {
@@ -52,12 +56,12 @@ func ValidateCredentialAllowed(config *schema.WebAuthn, credential *model.WebAut
 			}
 		}
 
-		return fmt.Errorf("error checking webauthn AAGUID: filters have been configured which explicitly require only permitted AAGUID's be used and '%s' is not permitted", credential.AAGUID.UUID)
+		return fmt.Errorf("error checking webauthn credential: filters have been configured which explicitly require only permitted AAGUID's be used and '%s' is not permitted", credential.AAGUID.UUID)
 	}
 
 	for _, aaguid := range config.Filtering.ProhibitedAAGUIDs {
 		if credential.AAGUID.UUID == aaguid {
-			return fmt.Errorf("error checking webauthn AAGUID: filters have been configured which prohibit the AAGUID '%s' from registration", aaguid)
+			return fmt.Errorf("error checking webauthn credential: filters have been configured which prohibit the AAGUID '%s' from registration", aaguid)
 		}
 	}
 

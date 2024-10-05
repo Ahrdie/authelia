@@ -247,6 +247,9 @@
 
   ## Authenticator Filtering.
   # filtering:
+    ## Prohibits registering Authenticators that claim they can export their credentials in some way.
+    # prohibit_backup_eligibility: false
+
     ## Permitted AAGUID's. If configured specifically only allows the listed AAGUID's.
     # permitted_aaguids: []
 
@@ -269,11 +272,8 @@
   ## Metadata Service validation via MDS3.
   # metadata:
 
-    ## Enable the metadata fetch behaviour. If enabled you have to ensure the configured path is writable.
-    # enable: false
-
-    ## Path to save the MDS3 blob to.
-    # path: 'data.mds3'
+    ## Enable the metadata fetch behaviour.
+    # enabled: false
 
     ## Enable Validation of the Trust Anchor. This generally should be enabled if you're using the metadata. It
     ## ensures the attestation certificate presented by the authenticator is valid against the MDS3 certificate that

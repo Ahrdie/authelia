@@ -859,9 +859,6 @@
           "title": "Certificates Directory Path",
           "description": "The path to a directory which is used to determine the certificates that are trusted."
         },
-        "cache_directory": {
-          "type": "string"
-        },
         "default_2fa_method": {
           "type": "string",
           "enum": [
@@ -3327,6 +3324,12 @@
           "description": "Allows users to sign in via Passkeys.",
           "default": false
         },
+        "experimental_enable_passkey_uv_two_factors": {
+          "type": "boolean",
+          "title": "Experimental: Enable User Verified Passkey Second Factor",
+          "description": "This option is experimental and WILL be removed. When true this will consider a Passkey login where the WebAuthn user verification requirement is met as being a single event 2FA login.",
+          "default": false
+        },
         "display_name": {
           "type": "string",
           "title": "Display Name",
@@ -3378,6 +3381,12 @@
     },
     "WebAuthnFiltering": {
       "properties": {
+        "prohibit_backup_eligibility": {
+          "type": "boolean",
+          "title": "Prohibit Backup Eligibility",
+          "description": "Prohibits registering authenticators which claim backup eligibility i.e. exporting credentials off of the device.",
+          "default": false
+        },
         "permitted_aaguids": {
           "items": {
             "$ref": "#/$defs/UUID"
@@ -3400,17 +3409,11 @@
     },
     "WebAuthnMetadata": {
       "properties": {
-        "enable": {
+        "enabled": {
           "type": "boolean",
-          "title": "Enable",
+          "title": "Enabled",
           "description": "Enables the use of the WebAuthn Metadata Service.",
           "default": false
-        },
-        "path": {
-          "type": "string",
-          "title": "Path",
-          "description": "WebAuthn Metadata Service data blob path.",
-          "default": "data.mds3"
         },
         "validate_trust_anchor": {
           "type": "boolean",

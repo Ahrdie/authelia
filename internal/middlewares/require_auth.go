@@ -11,7 +11,7 @@ import (
 // Require1FA check if user has enough permissions to execute the next handler.
 func Require1FA(next RequestHandler) RequestHandler {
 	return func(ctx *AutheliaCtx) {
-		if s, err := ctx.GetSession(); err != nil || s.AuthenticationLevel() < authentication.OneFactor {
+		if s, err := ctx.GetSession(); err != nil || s.AuthenticationLevel(ctx.Configuration.WebAuthn.EnablePasskey2FA) < authentication.OneFactor {
 			ctx.ReplyForbidden()
 			return
 		}
@@ -38,7 +38,7 @@ func RequireElevated(next RequestHandler) RequestHandler {
 			return
 		}
 
-		if userSession.AuthenticationLevel() < authentication.OneFactor {
+		if userSession.AuthenticationLevel(ctx.Configuration.WebAuthn.EnablePasskey2FA) < authentication.OneFactor {
 			ctx.Logger.Warn("An anonymous user attempted to access an elevated protected endpoint.")
 
 			if err = ctx.ReplyJSON(OKResponse{Status: "KO", Data: ElevatedForbiddenResponse{FirstFactor: true}}, fasthttp.StatusForbidden); err != nil {
@@ -59,7 +59,7 @@ func RequireElevated(next RequestHandler) RequestHandler {
 func handleRequireElevatedShouldDoNext(ctx *AutheliaCtx, userSession *session.UserSession) (doNext bool) {
 	var err error
 
-	level := userSession.AuthenticationLevel()
+	level := userSession.AuthenticationLevel(ctx.Configuration.WebAuthn.EnablePasskey2FA)
 
 	if ctx.Configuration.IdentityValidation.ElevatedSession.SkipSecondFactor && level >= authentication.TwoFactor {
 		ctx.Logger.WithFields(map[string]any{"user": userSession.Username}).Trace("The user session elevation was not checked as the user has performed second factor authentication and the policy to skip this is enabled.")

@@ -39,6 +39,9 @@ func NewSQLProvider(config *schema.Configuration, name, driverName, dataSourceNa
 		sqlInsertAuthenticationAttempt:            fmt.Sprintf(queryFmtInsertAuthenticationLogEntry, tableAuthenticationLogs),
 		sqlSelectAuthenticationAttemptsByUsername: fmt.Sprintf(queryFmtSelect1FAAuthenticationLogEntryByUsername, tableAuthenticationLogs),
 
+		sqlUpsertCachedData: fmt.Sprintf(queryFmtUpsertCachedData, tableCachedData),
+		sqlSelectCachedData: fmt.Sprintf(queryFmtSelectCachedData, tableCachedData),
+
 		sqlInsertIdentityVerification:  fmt.Sprintf(queryFmtInsertIdentityVerification, tableIdentityVerification),
 		sqlConsumeIdentityVerification: fmt.Sprintf(queryFmtConsumeIdentityVerification, tableIdentityVerification),
 		sqlRevokeIdentityVerification:  fmt.Sprintf(queryFmtRevokeIdentityVerification, tableIdentityVerification),
@@ -173,6 +176,10 @@ type SQLProvider struct {
 	// Table: authentication_logs.
 	sqlInsertAuthenticationAttempt            string
 	sqlSelectAuthenticationAttemptsByUsername string
+
+	// Table: cached_data.
+	sqlUpsertCachedData string
+	sqlSelectCachedData string
 
 	// Table: identity_verification.
 	sqlInsertIdentityVerification  string
@@ -1411,4 +1418,38 @@ func (p *SQLProvider) LoadAuthenticationLogs(ctx context.Context, username strin
 	}
 
 	return attempts, nil
+}
+
+func (p *SQLProvider) SaveCachedData(ctx context.Context, data model.CachedData) (err error) {
+	if data.Encrypted {
+		if data.Value, err = p.encrypt(data.Value); err != nil {
+			return fmt.Errorf("error encrypting cached data name '%s': %w", data.Name, err)
+		}
+	}
+
+	if _, err = p.db.ExecContext(ctx, p.sqlUpsertOAuth2BlacklistedJTI, data.Name, data.Encrypted, data.Value); err != nil {
+		return fmt.Errorf("error inserting cached data with name '%s': %w", data.Name, err)
+	}
+
+	return nil
+}
+
+func (p *SQLProvider) LoadCachedData(ctx context.Context, name string) (data *model.CachedData, err error) {
+	data = &model.CachedData{}
+
+	if err = p.db.GetContext(ctx, data, p.sqlSelectCachedData, name); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+
+		return nil, fmt.Errorf("error selecting cached data with name '%s': %w", name, err)
+	}
+
+	if data.Encrypted {
+		if data.Value, err = p.decrypt(data.Value); err != nil {
+			return nil, fmt.Errorf("error decrypting cached data with name '%s': %w", name, err)
+		}
+	}
+
+	return data, nil
 }

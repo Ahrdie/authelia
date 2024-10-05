@@ -30,19 +30,25 @@ webauthn:
   filtering:
     permitted_aaguids: []
     prohibited_aaguids: []
+    prohibit_backup_eligibility: false
   selection_criteria:
     attachment: 'cross-platform'
     discoverability: 'discouraged'
     user_verification: 'preferred'
   metadata:
-    enable: false
+    enabled: false
     path: 'data.mds3'
     validate_trust_anchor: true
     validate_entry: true
     validate_entry_permit_zero_aaguid: false
     validate_status: true
-    validate_status_permitted: ~
-    validate_status_prohibited: ~
+    validate_status_permitted: []
+    validate_status_prohibited:
+      - 'REVOKED'
+      - 'USER_KEY_PHYSICAL_COMPROMISE'
+      - 'USER_KEY_REMOTE_COMPROMISE'
+      - 'USER_VERIFICATION_BYPASS'
+      - 'ATTESTATION_KEY_COMPROMISE'
 ```
 
 ## Options
@@ -113,6 +119,13 @@ policy that requires certain authenticators. Mutually exclusive with [prohibited
 A list of Authenticator Attestation GUID's that users will not be able to register. Useful if company policy prevents
 certain authenticators. Mutually exclusive with [permitted_aaguids](#permitted_aaguids).
 
+#### prohibit_backup_eligibility
+
+{{< confkey type="boolean" default="false" required="no" >}}
+
+Setting this value to true will ensure Authenticators which can export credentials will not be able to register. This
+will likely prevent synchronized credentials from being registered.
+
 ### selection_criteria
 
 The selection criteria options set preferences for selecting a suitable authenticator.
@@ -163,23 +176,18 @@ Available Options:
 Configures the metadata service which is used to check the authenticity of authenticators. Useful if company policy
 requires only conformant authenticators.
 
-#### enable
+See the [reference guide](../../reference/guides/webauthn.md#recommended-configurations) for the recommended
+configuration.
+
+#### enabled
 
 {{< confkey type="boolean" default="false" required="no" >}}
 
-Enables the metadata service checking. Requires the configured [path](#path) to be readable and writable by the user
-running the process.
+Enables the metadata service checking. This requires the download of the metadata service blob which will utilize
+about 5MB of data in your configured [storage](../storage/introduction.md) backend.
 
 By default to prevent breaking changes this value is false. It's recommended however users take the time to configure
 it now that it's available.
-
-#### path
-
-{{< confkey type="string" default="data.mds3" required="no" >}}
-
-The path to the MDS3 Blob Cache. If the path is absolute (i.e. starts with a forward-slash), then it'll be considered
-absolute. If not it will be a relative path under the
-[cache_directory](../miscellaneous/introduction.md#cache_directory).
 
 #### validate_trust_anchor
 
@@ -193,7 +201,9 @@ blob. It's recommended this value is always the default value.
 {{< confkey type="boolean" default="true" required="no" >}}
 
 Enables validation that an entry exists for the authenticator in the MDS3 blob. It's recommended that this option is
-the default value, however this may exclude some authenticators which do not have FIDO compliance certification.
+the default value, however this may exclude some authenticators which do not have FIDO compliance certification. The
+recommendation is based on the fact that the authenticity of a particular authenticator cannot be validated without
+this.
 
 #### validate_status
 
@@ -206,13 +216,18 @@ authenticators excluded by default are likely compromised.
 
 {{< confkey type="list(string)" required="no" >}}
 
-A list of exclusively required statuses for an authenticator to pass validation.
+A list of exclusively required statuses for an authenticator to pass validation. See the
+[reference guide](../../reference/guides/webauthn.md#metadata-status) for information on valid values.
 
 #### validate_status_prohibited
 
 {{< confkey type="list(string)" required="no" >}}
 
-A list of authenticator statuses which for an authenticator that are prohibited from being registered.
+A list of authenticator statuses which for an authenticator that are prohibited from being registered. See the
+[reference guide](../../reference/guides/webauthn.md#metadata-status) for information on valid values. It's strongly
+recommended not changing the default value.
+
+The default configuration for this option is as per the [Configuration](#configuration) example above.
 
 ## Frequently Asked Questions
 

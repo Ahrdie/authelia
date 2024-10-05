@@ -18,14 +18,16 @@ func NewDefaultUserSession() UserSession {
 
 // IsAnonymous returns true if the username is empty or the AuthenticationLevel is authentication.NotAuthenticated.
 func (s *UserSession) IsAnonymous() bool {
-	return s.AuthenticationLevel() == authentication.NotAuthenticated
+	return s.AuthenticationLevel(false) == authentication.NotAuthenticated
 }
 
-func (s *UserSession) AuthenticationLevel() authentication.Level {
+func (s *UserSession) AuthenticationLevel(passkey2FA bool) authentication.Level {
 	switch {
 	case s.Username == "":
 		return authentication.NotAuthenticated
 	case s.AuthenticationMethodRefs.FactorPossession() && s.AuthenticationMethodRefs.FactorKnowledge():
+		return authentication.TwoFactor
+	case passkey2FA && s.AuthenticationMethodRefs.WebAuthn && s.AuthenticationMethodRefs.WebAuthnUserVerified:
 		return authentication.TwoFactor
 	case s.AuthenticationMethodRefs.FactorPossession() || s.AuthenticationMethodRefs.FactorKnowledge():
 		return authentication.OneFactor

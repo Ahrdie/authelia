@@ -10,11 +10,6 @@
         "env": "AUTHELIA_CERTIFICATES_DIRECTORY"
     },
     {
-        "path": "cache_directory",
-        "secret": false,
-        "env": "AUTHELIA_CACHE_DIRECTORY"
-    },
-    {
         "path": "default_2fa_method",
         "secret": false,
         "env": "AUTHELIA_DEFAULT_2FA_METHOD"
@@ -985,6 +980,11 @@
         "env": "AUTHELIA_WEBAUTHN_ENABLE_PASSKEY_LOGIN"
     },
     {
+        "path": "webauthn.experimental_enable_passkey_uv_two_factors",
+        "secret": false,
+        "env": "AUTHELIA_WEBAUTHN_EXPERIMENTAL_ENABLE_PASSKEY_UV_TWO_FACTORS"
+    },
+    {
         "path": "webauthn.display_name",
         "secret": false,
         "env": "AUTHELIA_WEBAUTHN_DISPLAY_NAME"
@@ -998,6 +998,11 @@
         "path": "webauthn.timeout",
         "secret": false,
         "env": "AUTHELIA_WEBAUTHN_TIMEOUT"
+    },
+    {
+        "path": "webauthn.filtering.prohibit_backup_eligibility",
+        "secret": false,
+        "env": "AUTHELIA_WEBAUTHN_FILTERING_PROHIBIT_BACKUP_ELIGIBILITY"
     },
     {
         "path": "webauthn.selection_criteria.attachment",
@@ -1015,14 +1020,9 @@
         "env": "AUTHELIA_WEBAUTHN_SELECTION_CRITERIA_USER_VERIFICATION"
     },
     {
-        "path": "webauthn.metadata.enable",
+        "path": "webauthn.metadata.enabled",
         "secret": false,
-        "env": "AUTHELIA_WEBAUTHN_METADATA_ENABLE"
-    },
-    {
-        "path": "webauthn.metadata.path",
-        "secret": false,
-        "env": "AUTHELIA_WEBAUTHN_METADATA_PATH"
+        "env": "AUTHELIA_WEBAUTHN_METADATA_ENABLED"
     },
     {
         "path": "webauthn.metadata.validate_trust_anchor",

@@ -20,9 +20,7 @@ RUN \
 COPY LICENSE .healthcheck.env entrypoint.sh healthcheck.sh ./
 
 RUN \
-	chmod 0666 /app/.healthcheck.env && \
-    mkdir /var/cache/authelia && \
-    chmod 0777 /var/cache/authelia
+	chmod 0666 /app/.healthcheck.env
 
 COPY authelia-${TARGETOS}-${TARGETARCH}-musl ./authelia
 

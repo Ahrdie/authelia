@@ -317,7 +317,7 @@ func (s *RegulatorSuite) TestShouldHaveRegulatorDisabled() {
 	_, err := regulator.Regulate(s.mock.Ctx, "john")
 	assert.NoError(s.T(), err)
 
-	// Check Enable Functionality.
+	// Check Enabled Functionality.
 	config = schema.Regulation{
 		MaxRetries: 1,
 		FindTime:   time.Second * 180,

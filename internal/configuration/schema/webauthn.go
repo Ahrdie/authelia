@@ -12,6 +12,7 @@ import (
 type WebAuthn struct {
 	Disable            bool   `koanf:"disable" json:"disable" jsonschema:"default=false,title=Disable" jsonschema_description:"Disables the WebAuthn 2FA functionality."`
 	EnablePasskeyLogin bool   `koanf:"enable_passkey_login" json:"enable_passkey_login" jsonschema:"default=false,title=Enable Passkey Logins" jsonschema_description:"Allows users to sign in via Passkeys."`
+	EnablePasskey2FA   bool   `koanf:"experimental_enable_passkey_uv_two_factors" json:"experimental_enable_passkey_uv_two_factors" jsonschema:"default=false,title=Experimental: Enable User Verified Passkey Second Factor" jsonschema_description:"This option is experimental and WILL be removed. When true this will consider a Passkey login where the WebAuthn user verification requirement is met as being a single event 2FA login."`
 	DisplayName        string `koanf:"display_name" json:"display_name" jsonschema:"default=Authelia,title=Display Name" jsonschema_description:"The display name attribute for the WebAuthn relying party."`
 
 	ConveyancePreference protocol.ConveyancePreference `koanf:"attestation_conveyance_preference" json:"attestation_conveyance_preference" jsonschema:"default=indirect,enum=none,enum=indirect,enum=direct,title=Conveyance Preference" jsonschema_description:"The default conveyance preference for all WebAuthn credentials."`
@@ -24,8 +25,7 @@ type WebAuthn struct {
 }
 
 type WebAuthnMetadata struct {
-	Enable bool   `koanf:"enable" json:"enable" jsonschema:"default=false,title=Enable" jsonschema_description:"Enables the use of the WebAuthn Metadata Service."`
-	Path   string `koanf:"path" json:"path" jsonschema:"default=data.mds3,title=Path" jsonschema_description:"WebAuthn Metadata Service data blob path."`
+	Enabled bool `koanf:"enabled" json:"enabled" jsonschema:"default=false,title=Enabled" jsonschema_description:"Enables the use of the WebAuthn Metadata Service."`
 
 	ValidateTrustAnchor           bool `koanf:"validate_trust_anchor" json:"validate_trust_anchor" jsonschema:"default=true,title=Validate Trust Anchor" jsonschema_description:"WebAuthn Authenticator metadata entry trust anchor validation."`
 	ValidateEntry                 bool `koanf:"validate_entry" json:"validate_entry" jsonschema:"default=true,title=Filtering" jsonschema_description:"WebAuthn Authenticator metadata entry validation requires the AAGUID exists as a MDS3 registered entry."`
@@ -43,8 +43,9 @@ type WebAuthnSelectionCriteria struct {
 }
 
 type WebAuthnFiltering struct {
-	PermittedAAGUIDs  []uuid.UUID `koanf:"permitted_aaguids" json:"permitted_aaguids" jsonschema:"title=Permitted AAGUIDs" jsonschema_description:"List of allowed WebAuthn AAGUIDs. No other authenticator can be registered."`
-	ProhibitedAAGUIDs []uuid.UUID `koanf:"prohibited_aaguids" json:"prohibited_aaguids" jsonschema:"title=Prohibited AAGUIDs" jsonschema_description:"List of prohibited WebAuthn AAGUIDs. Authenticators with these AAGUIDs cannot be registered."`
+	ProhibitBackupEligibility bool        `koanf:"prohibit_backup_eligibility" json:"prohibit_backup_eligibility" jsonschema:"default=false,title=Prohibit Backup Eligibility" jsonschema_description:"Prohibits registering authenticators which claim backup eligibility i.e. exporting credentials off of the device."`
+	PermittedAAGUIDs          []uuid.UUID `koanf:"permitted_aaguids" json:"permitted_aaguids" jsonschema:"title=Permitted AAGUIDs" jsonschema_description:"List of allowed WebAuthn AAGUIDs. No other authenticator can be registered."`
+	ProhibitedAAGUIDs         []uuid.UUID `koanf:"prohibited_aaguids" json:"prohibited_aaguids" jsonschema:"title=Prohibited AAGUIDs" jsonschema_description:"List of prohibited WebAuthn AAGUIDs. Authenticators with these AAGUIDs cannot be registered."`
 }
 
 // DefaultWebAuthnConfiguration describes the default values for the WebAuthn.
@@ -59,8 +60,7 @@ var DefaultWebAuthnConfiguration = WebAuthn{
 		UserVerification: protocol.VerificationPreferred,
 	},
 	Metadata: WebAuthnMetadata{
-		Enable:                        false,
-		Path:                          "data.mds3",
+		Enabled:                       false,
 		ValidateTrustAnchor:           true,
 		ValidateEntry:                 true,
 		ValidateEntryPermitZeroAAGUID: false,

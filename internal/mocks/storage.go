@@ -259,6 +259,21 @@ func (mr *MockStorageMockRecorder) LoadAuthenticationLogs(ctx, username, fromDat
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadAuthenticationLogs", reflect.TypeOf((*MockStorage)(nil).LoadAuthenticationLogs), ctx, username, fromDate, limit, page)
 }
 
+// LoadCachedData mocks base method.
+func (m *MockStorage) LoadCachedData(arg0 context.Context, arg1 string) (*model.CachedData, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoadCachedData", arg0, arg1)
+	ret0, _ := ret[0].(*model.CachedData)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoadCachedData indicates an expected call of LoadCachedData.
+func (mr *MockStorageMockRecorder) LoadCachedData(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadCachedData", reflect.TypeOf((*MockStorage)(nil).LoadCachedData), arg0, arg1)
+}
+
 // LoadIdentityVerification mocks base method.
 func (m *MockStorage) LoadIdentityVerification(ctx context.Context, jti string) (*model.IdentityVerification, error) {
 	m.ctrl.T.Helper()
@@ -701,6 +716,20 @@ func (m *MockStorage) Rollback(ctx context.Context) error {
 func (mr *MockStorageMockRecorder) Rollback(ctx any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Rollback", reflect.TypeOf((*MockStorage)(nil).Rollback), ctx)
+}
+
+// SaveCachedData mocks base method.
+func (m *MockStorage) SaveCachedData(arg0 context.Context, arg1 model.CachedData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SaveCachedData", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SaveCachedData indicates an expected call of SaveCachedData.
+func (mr *MockStorageMockRecorder) SaveCachedData(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCachedData", reflect.TypeOf((*MockStorage)(nil).SaveCachedData), arg0, arg1)
 }
 
 // SaveIdentityVerification mocks base method.

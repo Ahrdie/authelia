@@ -293,6 +293,33 @@ const (
 )
 
 const (
+	queryFmtUpsertCachedData = `
+		REPLACE INTO %s (updated_at, name, encrypted, value)
+		VALUES (CURRENT_TIMESTAMP, ?, ?, ?);`
+
+	queryFmtUpsertCachedDataPostgreSQL = `
+		INSERT INTO %s (updated_at, name, encrypted, value)
+		VALUES (CURRENT_TIMESTAMP, $1, $2, $3)
+			ON CONFLICT (name)
+			DO UPDATE SET encrypted = $2, value = $3;`
+
+	queryFmtSelectCachedData = `
+		SELECT id, created_at, updated_at, name, encrypted, value
+		FROM %s
+		WHERE name = ?;`
+
+	queryFmtSelectCachedDataEncryptedData = `
+		SELECT id, value
+		FROM %s
+		WHERE encrypted = 1;`
+
+	queryFmtUpdateCachedDataEncryptedData = `
+		UPDATE %s
+		SET value = ?
+		WHERE id = ?;`
+)
+
+const (
 	queryFmtSelectEncryptionValue = `
 		SELECT (value)
         FROM %s

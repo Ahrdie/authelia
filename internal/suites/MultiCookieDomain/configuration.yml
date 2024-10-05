@@ -6,8 +6,6 @@
 certificates_directory: /certs/
 theme: auto
 
-cache_directory: '/var/cache/authelia'
-
 server:
   address: 'tcp://:9091'
   tls:
