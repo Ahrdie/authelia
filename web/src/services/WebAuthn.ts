@@ -109,7 +109,7 @@ export async function getWebAuthnResult(options: PublicKeyCredentialRequestOptio
     };
 
     try {
-        result.response = await startAuthentication(options);
+        result.response = await startAuthentication({ optionsJSON: options });
     } catch (e) {
         const exception = e as DOMException;
         if (exception !== undefined) {
@@ -237,7 +237,7 @@ export async function startWebAuthnRegistration(options: PublicKeyCredentialCrea
     };
 
     try {
-        result.response = await startRegistration(options);
+        result.response = await startRegistration({ optionsJSON: options });
     } catch (e) {
         const exception = e as DOMException;
         if (exception !== undefined) {
